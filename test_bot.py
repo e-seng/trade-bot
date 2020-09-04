@@ -2,6 +2,8 @@
 
 import yfinance as yf
 
+from sys import argv
+
 def main():
     tsla = yf.Ticker("TSLA")
     print(tsla.info)

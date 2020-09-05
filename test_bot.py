@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 import yfinance as yf
+import pandas as pd
+import numpy as np
 
 from sys import argv
 

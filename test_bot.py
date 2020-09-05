@@ -17,15 +17,32 @@ def init_stock_data(stock_ticker, rootdir="."):
     directory in the data folder. Filenames will follow the format of
     sd-<stock ticker name, in lower case>.csv
 
+    The csv will contain the following headers:
+    prev_changed
+      - The amount has risen or has fallen for the stock
+    avg_drop
+      - The average amount the value has dropped when the value has historically
+        changed by prev_changed (0 if non-existant)
+    avg_rise
+      - The average amount the value has risen when the value has historically
+        changed by prev_changed (0 if non-existant)
+    max_drop
+      - The maximum amount the value has dropped when the value has historically
+        changed by prev_changed (0 if non-existant)
+    min_rise
+      - The maximum amoun the value has risen by when the value has historically
+        changed by prev_changed (0 if non-existant)
+
     @params 
-      - stock_ticker {str} The ticker for the desired stock
-      - filepath? {str} The filepath to store this data, defaults to the
-        root directory
+    stock_ticker {str}
+      - The ticker for the desired stock
+    filepath? {str}
+      - The filepath to store this data, defaults to the root directory
     """
     filename = f"sd-{stock_ticker}.csv"
     filepath = os.path.join(rootdir, "data", filename)
 
-    fieldnames = ["prev-rise-amnt", "avg_drop", "avg_rise", "max-drop", "max-rise"]
+    fieldnames = ["prev_change", "avg_drop", "avg_rise", "max-drop", "max-rise"]
     with open(filepath, "a+", newline='') as file:
         pass
 

@@ -5,6 +5,8 @@ import pandas as pd
 import numpy as np
 
 from sys import argv
+import os
+import csv
 
 def init_stock_data(stock_ticker, rootdir="."):
     """
@@ -16,7 +18,11 @@ def init_stock_data(stock_ticker, rootdir="."):
       - filepath? {str} The filepath to store this data, defaults to the
         root directory
     """
-    
+    filename = f"sd-{stock_ticker}.csv"
+    filepath = os.path.join(rootdir, "data", filename)
+
+    with open(filepath, "wb+", newline='') as file:
+        pass
 
 def main():
     tsla = yf.Ticker("TSLA")

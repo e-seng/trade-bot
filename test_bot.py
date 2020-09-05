@@ -25,7 +25,8 @@ def init_stock_data(stock_ticker, rootdir="."):
     filename = f"sd-{stock_ticker}.csv"
     filepath = os.path.join(rootdir, "data", filename)
 
-    with open(filepath, "wb+", newline='') as file:
+    fieldnames = ["prev-rise-amnt", "avg_drop", "avg_rise", "max-drop", "max-rise"]
+    with open(filepath, "a+", newline='') as file:
         pass
 
 def main():

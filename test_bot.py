@@ -39,7 +39,7 @@ def init_stock_data(stock_ticker, rootdir="."):
     filepath? {str}
       - The filepath to store this data, defaults to the root directory
     """
-    filename = f"sd-{stock_ticker}.csv"
+    filename = f"sd-{stock_ticker.lower()}.csv"
     filepath = os.path.join(rootdir, "data", filename)
 
     fieldnames = ["prev_change", "avg_drop", "avg_rise", "max-drop", "max-rise"]

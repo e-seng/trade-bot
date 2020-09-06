@@ -57,6 +57,9 @@ def init_stock_data(stock_ticker, rootdir="."):
         writer = csv.DictWriter(file, fieldnames=fieldnames)
         writer.writeheader()
 
+def save_stock_data(stock_ticker):
+    return
+
 def main():
     tsla = yf.Ticker("TSLA")
     print(tsla.info)

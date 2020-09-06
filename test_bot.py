@@ -43,6 +43,10 @@ def init_stock_data(stock_ticker, rootdir="."):
     folderpath = os.path.join(rootdir, "data")
     filepath = os.path.join(folderpath, filename)
 
+    if os.path.isfile(filepath):
+        print("Attempted to initialize existing stock data file, skipping")
+        return
+
     try:
         os.mkdir(folderpath)
     except FileExistsError:

@@ -40,11 +40,18 @@ def init_stock_data(stock_ticker, rootdir="."):
       - The filepath to store this data, defaults to the current directory
     """
     filename = f"sd-{stock_ticker.lower()}.csv"
-    filepath = os.path.join(rootdir, "data", filename)
+    folderpath = os.path.join(rootdir, "data")
+    filepath = os.path.join(folderpath, filename)
+
+    try:
+        os.mkdir(folderpath)
+    except FileExistsError:
+        pass
 
     fieldnames = ["prev_change", "avg_drop", "avg_rise", "max-drop", "max-rise"]
-    with open(filepath, "a+", newline='') as file:
-        pass
+    with open(filepath, "+w", newline='') as file:
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+        writer.writeheader()
 
 def main():
     tsla = yf.Ticker("TSLA")

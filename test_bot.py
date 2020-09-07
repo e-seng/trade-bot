@@ -57,7 +57,22 @@ def init_stock_data(stock_ticker, rootdir="."):
         writer = csv.DictWriter(file, fieldnames=fieldnames)
         writer.writeheader()
 
-def save_stock_data(stock_ticker):
+def save_stock_data(stock_ticker, data_line, rootdir="."):
+    """
+    Saves a line of stock data in ascending numeric order.
+    This order is based off the Closed value provided within the data line.
+
+    @params:
+      - stock_ticker {str}:
+        The ticker of the desired stock.
+      - data_line {dict}:
+        The line of data to be inserted into the stock data file. This
+        dictionary contains the fieldnames "prev_change", "avg_drop",
+        "avg_rise", "max-drop", "max-rise".
+    """
+    filename = f"sd-{stock_ticker.lower()}.csv"
+    folderpath = os.path.join(rootdir, "data")
+    filepath = os.path.join(folderpath, filename)
     return
 
 def main():

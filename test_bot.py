@@ -97,10 +97,10 @@ def save_stock_data(stock_ticker, data_line, rootdir="."):
 
     index = 1 # Start by seeing if the value is 
     while(index <= len(existing_data)): 
-        print(index, existing_data[index][0], insert_values[0])
         if(index == len(existing_data)):
             existing_data.append(insert_values)
             break
+
         if(float(existing_data[index][0]) < float(insert_values[0])):
             index += 1
             continue
@@ -108,9 +108,17 @@ def save_stock_data(stock_ticker, data_line, rootdir="."):
         break
 
     with open(filepath, "w", newline='') as file:
-        writer = csv.writer(file)
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
         for dl in existing_data:
-            writer.writerow(dl)
+            data_dict = {}
+            for index, value in enumerate(fieldnames):
+                data_dict[value] = dl[index]
+            writer.writerow(data_dict)
+
+def analyze_stock_data(stock_ticker, start, end="", period="1y"):
+    """
+    Analyzes the stock data starting at a desired date
+    """    
     return
 
 def main():

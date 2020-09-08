@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 
 from sys import argv
+from collections import OrderedDict
 import os
 import csv
 
@@ -68,7 +69,7 @@ def save_stock_data(stock_ticker, data_line, rootdir="."):
       - data_line {dict}:
         The line of data to be inserted into the stock data file. This
         dictionary contains the fieldnames "prev_change", "avg_drop",
-        "avg_rise", "max-drop", "max-rise".
+        "avg_rise", "max-drop", "max-rise", in this order
     """
     filename = f"sd-{stock_ticker.lower()}.csv"
     folderpath = os.path.join(rootdir, "data")
@@ -76,7 +77,27 @@ def save_stock_data(stock_ticker, data_line, rootdir="."):
 
     fieldnames = ["prev_change", "avg_drop", "avg_rise", "max-drop", "max-rise"]
     with open(filepath, "r", newline='') as file:
-        existing_data = list(csv.reader(file, fieldnames=fieldnames))
+        existing_data = list(csv.reader(file))
+
+    # Produce the data that will be inserted into the csv
+    insert_values = list(data_line.values())
+
+    index = 1 # Start by seeing if the value is 
+    while(index <= len(existing_data)): 
+        print(index, existing_data[index][0], insert_values[0])
+        if(index == len(existing_data)):
+            existing_data.append(insert_values)
+            break
+        if(float(existing_data[index][0]) < float(insert_values[0])):
+            index += 1
+            continue
+        existing_data.insert(index, insert_values)
+        break
+
+    with open(filepath, "w", newline='') as file:
+        writer = csv.writer(file)
+        for dl in existing_data:
+            writer.writerow(dl)
     return
 
 def main():

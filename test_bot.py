@@ -66,6 +66,13 @@ def init_stock_data(stock_ticker, rootdir="."):
         writer = csv.DictWriter(file, fieldnames=fieldnames)
         writer.writeheader()
 
+def convert_to_dict(keys, values):
+    new_dict = {}
+    for index, value in enumerate(keys):
+        new_dict[value] = values[index]
+
+    return new_dict
+
 def save_stock_data(stock_ticker, data_line, rootdir="."):
     """
     Saves a line of stock data in ascending numeric order.
@@ -89,19 +96,23 @@ def save_stock_data(stock_ticker, data_line, rootdir="."):
                   "max_drop",
                   "max_rise",
                   "common_change"]
-    with open(filepath, "r", newline='') as file:
-        existing_data = list(csv.reader(file))
 
-    # Produce the data that will be inserted into the csv
-    insert_values = list(data_line.values())
+    existing_data = []
+    with open(filepath, "r", newline='') as file:
+        for line in csv.reader(file):
+            existing_line = convert_to_dict(fieldnames, line)
+            existing_data.append(existing_line)
+
+    print(existing_data)\
 
     index = 1 # Start by seeing if the value is 
-    while(index <= len(existing_data)): 
+    while(index <= len(existing_data)):
         if(index == len(existing_data)):
-            existing_data.append(insert_values)
+            existing_data.append(data_line)
             break
 
-        if(float(existing_data[index][0]) < float(insert_values[0])):
+        prev_change = float(existing_data[index]["prev_change"])
+        if(prev_change < float(data_line["prev_change"])):
             index += 1
             continue
         existing_data.insert(index, insert_values)
@@ -110,10 +121,7 @@ def save_stock_data(stock_ticker, data_line, rootdir="."):
     with open(filepath, "w", newline='') as file:
         writer = csv.DictWriter(file, fieldnames=fieldnames)
         for dl in existing_data:
-            data_dict = {}
-            for index, value in enumerate(fieldnames):
-                data_dict[value] = dl[index]
-            writer.writerow(data_dict)
+            writer.writerow(dl)
 
 def analyze_stock_data(stock_ticker, start, end="", period="1y"):
     """

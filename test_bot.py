@@ -33,6 +33,9 @@ def init_stock_data(stock_ticker, rootdir="."):
       - min_rise:
         The maximum amoun the value has risen by when the value has historically
         changed by prev_changed (0 if non-existant)
+      - common_change:
+        The number of times the stock has changed by prev_changed (should be an
+        integer no less than one)
 
     @params 
       - stock_ticker {str}:
@@ -53,7 +56,12 @@ def init_stock_data(stock_ticker, rootdir="."):
     except FileExistsError:
         pass
 
-    fieldnames = ["prev_change", "avg_drop", "avg_rise", "max-drop", "max-rise"]
+    fieldnames = ["prev_change",
+                  "avg_drop",
+                  "avg_rise",
+                  "max_drop",
+                  "max_rise",
+                  "common_change"]
     with open(filepath, "+w", newline='') as file:
         writer = csv.DictWriter(file, fieldnames=fieldnames)
         writer.writeheader()
@@ -75,7 +83,12 @@ def save_stock_data(stock_ticker, data_line, rootdir="."):
     folderpath = os.path.join(rootdir, "data")
     filepath = os.path.join(folderpath, filename)
 
-    fieldnames = ["prev_change", "avg_drop", "avg_rise", "max-drop", "max-rise"]
+    fieldnames = ["prev_change",
+                  "avg_drop",
+                  "avg_rise",
+                  "max_drop",
+                  "max_rise",
+                  "common_change"]
     with open(filepath, "r", newline='') as file:
         existing_data = list(csv.reader(file))
 

@@ -23,10 +23,10 @@ def init_stock_data(stock_ticker, rootdir="."):
         The amount has risen or has fallen for the stock
       - avg_drop:
         The average amount the value has dropped when the value has historically
-        changed by prev_changed (0 if non-existant)
+        changed by prev_changed (0 if non-existant, [0, inf))
       - avg_rise:
         The average amount the value has risen when the value has historically
-        changed by prev_changed (0 if non-existant)
+        changed by prev_changed (0 if non-existant, [0, inf))
       - max_drop:
         The maximum amount the value has dropped when the value has historically
         changed by prev_changed (0 if non-existant, [0, inf))
@@ -73,6 +73,25 @@ def convert_to_dict(keys, values):
 
     return new_dict
 
+def handle_data_match(existing_values, update_values):
+    n = float(existing_values["common_change"])
+    # avg_drop calculations
+    drop_sum = float(existing_values["avg_drop"]) * n + update_values["avg_drop"]
+    existing_values["avg_drop"] = drop_sum / (n + 1)
+    # avg_rise calculations
+    rise_sum = float(existing_values["avg_rise"]) * n + update_values["avg_rise"]
+    existing_values["avg_rise"] = drop_sum / (n + 1)
+    # max_drop
+    if(update_values["max_drop"] > float(existing_values["max_drop"])):
+        existing_values["max_drop"] = update_values["max_drop"]
+    # max_rise
+    if(update_values["max_rise"] > float(existing_values["max_rise"])):
+        existing_values["max_rise"] = update_values["max_rise"]
+    # common_change
+    existing_values["common_change"] = int(existing_values["common_change"]) + 1
+
+    return existing_values
+
 def save_stock_data(stock_ticker, data_line, rootdir="."):
     """
     Saves a line of stock data in ascending numeric order.
@@ -115,7 +134,13 @@ def save_stock_data(stock_ticker, data_line, rootdir="."):
         if(prev_change < float(data_line["prev_change"])):
             index += 1
             continue
-        existing_data.insert(index, insert_values)
+
+        if(prev_change == float(data_line["prev_change"])):
+            new_data = handle_data_match(existing_data[index], data_line) ##
+            existing_data[index] = new_data
+            break
+
+        existing_data.insert(index, data_line)
         break
 
     with open(filepath, "w", newline='') as file:

@@ -29,10 +29,10 @@ def init_stock_data(stock_ticker, rootdir="."):
         changed by prev_changed (0 if non-existant)
       - max_drop:
         The maximum amount the value has dropped when the value has historically
-        changed by prev_changed (0 if non-existant)
-      - min_rise:
+        changed by prev_changed (0 if non-existant, [0, inf))
+      - max_rise:
         The maximum amoun the value has risen by when the value has historically
-        changed by prev_changed (0 if non-existant)
+        changed by prev_changed (0 if non-existant, [0, inf))
       - common_change:
         The number of times the stock has changed by prev_changed (should be an
         integer no less than one)

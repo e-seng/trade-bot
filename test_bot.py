@@ -73,6 +73,10 @@ def save_stock_data(stock_ticker, data_line, rootdir="."):
     filename = f"sd-{stock_ticker.lower()}.csv"
     folderpath = os.path.join(rootdir, "data")
     filepath = os.path.join(folderpath, filename)
+
+    fieldnames = ["prev_change", "avg_drop", "avg_rise", "max-drop", "max-rise"]
+    with open(filepath, "r", newline='') as file:
+        existing_data = list(csv.reader(file, fieldnames=fieldnames))
     return
 
 def main():

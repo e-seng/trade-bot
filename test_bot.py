@@ -3,6 +3,7 @@
 import yfinance as yf
 import pandas as pd
 import numpy as np
+import json
 
 from sys import argv
 from collections import OrderedDict
@@ -33,9 +34,9 @@ def init_stock_data(stock_ticker, rootdir="."):
       - max_rise:
         The maximum amoun the value has risen by when the value has historically
         changed by prev_changed (0 if non-existant, [0, inf))
-      - common_change:
-        The number of times the stock has changed by prev_changed (should be an
-        integer no less than one)
+      - occurances:
+        The dates where prev_change occur, these dates should be in ISO format
+        (YYYY-mm-dd)
 
     @params 
       - stock_ticker {str}:
@@ -61,7 +62,7 @@ def init_stock_data(stock_ticker, rootdir="."):
                   "avg_rise",
                   "max_drop",
                   "max_rise",
-                  "common_change"]
+                  "occurances"]
     with open(filepath, "+w", newline='') as file:
         writer = csv.DictWriter(file, fieldnames=fieldnames)
         writer.writeheader()
@@ -73,8 +74,17 @@ def convert_to_dict(keys, values):
 
     return new_dict
 
+def yeet_chars(string, chars=[]):
+    for char in chars:
+        string = ''.join(string.split(char))
+
+    return string
+
 def handle_data_match(existing_values, update_values):
-    n = float(existing_values["common_change"])
+    if(update_values["occurances"][0] in existing_values["occurances"]): 
+        return existing_values
+
+    n = len(existing_values["occurances"])
     # avg_drop calculations
     drop_sum = float(existing_values["avg_drop"]) * n + update_values["avg_drop"]
     existing_values["avg_drop"] = drop_sum / (n + 1)
@@ -87,8 +97,11 @@ def handle_data_match(existing_values, update_values):
     # max_rise
     if(update_values["max_rise"] > float(existing_values["max_rise"])):
         existing_values["max_rise"] = update_values["max_rise"]
-    # common_change
-    existing_values["common_change"] = int(existing_values["common_change"]) + 1
+    # occurances
+    print(existing_values["occurances"])
+    occurances = yeet_chars(existing_values["occurances"], ['\'', '"', '[', ']', ' ']).split(",")
+    occurances.append(update_values["occurances"][0])
+    existing_values["occurances"] = occurances
 
     return existing_values
 
@@ -114,15 +127,13 @@ def save_stock_data(stock_ticker, data_line, rootdir="."):
                   "avg_rise",
                   "max_drop",
                   "max_rise",
-                  "common_change"]
+                  "occurances"]
 
     existing_data = []
     with open(filepath, "r", newline='') as file:
         for line in csv.reader(file):
             existing_line = convert_to_dict(fieldnames, line)
             existing_data.append(existing_line)
-
-    print(existing_data)\
 
     index = 1 # Start by seeing if the value is 
     while(index <= len(existing_data)):

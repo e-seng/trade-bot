@@ -195,7 +195,7 @@ def collect_stock_data(stock_ticker, start_date, end_date=None):
     for index, current_stock in enumerate(history["Close"]):
         if(index == 0): continue
         current_date = dates[index]
-        change = current_stock - history["Close"][index]
+        change = current_stock - history["Close"][index - 1]
         change_type = "rise" # Either rise or drop
 
         if(change < 0):

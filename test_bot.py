@@ -122,6 +122,8 @@ def save_stock_data(stock_ticker, data_line, rootdir="."):
     folderpath = os.path.join(rootdir, "data")
     filepath = os.path.join(folderpath, filename)
 
+    if not os.path.isfile(filepath): init_stock_data(stock_ticker, rootdir)
+
     fieldnames = ["prev_change",
                   "avg_drop",
                   "avg_rise",

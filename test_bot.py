@@ -94,7 +94,7 @@ def handle_data_match(existing_values, update_values):
     existing_values["avg_drop"] = drop_sum / (n + 1)
     # avg_rise calculations
     rise_sum = float(existing_values["avg_rise"]) * n + update_values["avg_rise"]
-    existing_values["avg_rise"] = drop_sum / (n + 1)
+    existing_values["avg_rise"] = rise_sum / (n + 1)
     # max_drop
     if(update_values["max_drop"] > float(existing_values["max_drop"])):
         existing_values["max_drop"] = update_values["max_drop"]

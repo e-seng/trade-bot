@@ -80,8 +80,11 @@ def yeet_chars(string, chars=[]):
 
     return string
 
+def parse_date(timestamp):
+    return str(timestamp).split(' ')[0]
+
 def handle_data_match(existing_values, update_values):
-    date = str(update_values["occurances"][0]).split(' ')[0]
+    date = parse_date(update_values["occurances"][0])
     if(date in existing_values["occurances"]): 
         return existing_values
 
@@ -99,7 +102,7 @@ def handle_data_match(existing_values, update_values):
     if(update_values["max_rise"] > float(existing_values["max_rise"])):
         existing_values["max_rise"] = update_values["max_rise"]
     # occurances
-    print(existing_values["occurances"])
+    print("105:", date)
     occurances = yeet_chars(existing_values["occurances"], ['\'', '"', '[', ']', ' ']).split(",")
     occurances.append(date)
     existing_values["occurances"] = occurances
@@ -140,10 +143,11 @@ def save_stock_data(stock_ticker, data_line, rootdir="."):
 
     index = 1 # Start by seeing if the value is 
     while(index <= len(existing_data)):
+        if type(data_line["occurances"][0]) != str:
+            date = parse_date(data_line["occurances"][0])
+            data_line["occurances"][0] = date
+            
         if(index == len(existing_data)):
-            if type(data_line["occurances"][0]) != str:
-                date = str(data_line["occurances"][0]).split(' ')[0]
-                data_line["occurances"] = date
             existing_data.append(data_line)
             break
 

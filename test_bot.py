@@ -81,7 +81,8 @@ def yeet_chars(string, chars=[]):
     return string
 
 def handle_data_match(existing_values, update_values):
-    if(update_values["occurances"][0] in existing_values["occurances"]): 
+    date = str(update_values["occurances"][0]).split(' ')[0]
+    if(date in existing_values["occurances"]): 
         return existing_values
 
     n = len(existing_values["occurances"])
@@ -100,7 +101,7 @@ def handle_data_match(existing_values, update_values):
     # occurances
     print(existing_values["occurances"])
     occurances = yeet_chars(existing_values["occurances"], ['\'', '"', '[', ']', ' ']).split(",")
-    occurances.append(update_values["occurances"][0])
+    occurances.append(date)
     existing_values["occurances"] = occurances
 
     return existing_values
@@ -140,6 +141,9 @@ def save_stock_data(stock_ticker, data_line, rootdir="."):
     index = 1 # Start by seeing if the value is 
     while(index <= len(existing_data)):
         if(index == len(existing_data)):
+            if type(data_line["occurances"][0]) != str:
+                date = str(data_line["occurances"][0]).split(' ')[0]
+                data_line["occurances"] = date
             existing_data.append(data_line)
             break
 

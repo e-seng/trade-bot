@@ -146,7 +146,7 @@ def save_stock_data(stock_ticker, data_line, rootdir="."):
         if type(data_line["occurances"][0]) != str:
             date = parse_date(data_line["occurances"][0])
             data_line["occurances"][0] = date
-            
+
         if(index == len(existing_data)):
             existing_data.append(data_line)
             break
@@ -197,16 +197,18 @@ def collect_stock_data(stock_ticker, start_date, end_date=None):
     history = ticker.history(start=start_date, end=end_date)
     dates = history.index
     for index, current_stock in enumerate(history["Close"]):
+        if(index + 1 >= len(history["Close"])): break
         if(index == 0): continue
         current_date = dates[index]
-        change = current_stock - history["Close"][index - 1]
+        prev_change = current_stock - history["Close"][index - 1]
+        change = history["Close"][index + 1] - current_stock
         change_type = "rise" # Either rise or drop
 
         if(change < 0):
             change_type = "drop"
             change *= -1
 
-        sd = {"prev_change" : change,
+        sd = {"prev_change" : prev_change,
               "avg_drop" : 0,
               "avg_rise" : 0,
               "max_drop" : 0,

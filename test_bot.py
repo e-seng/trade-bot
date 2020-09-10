@@ -159,10 +159,54 @@ def save_stock_data(stock_ticker, data_line, rootdir="."):
         for dl in existing_data:
             writer.writerow(dl)
 
-def analyze_stock_data(stock_ticker, start, end="", period="1y"):
+def collect_stock_data(stock_ticker, start_date, end_date=None):
     """
-    Analyzes the stock data starting at a desired date
-    """    
+    Collects the stock data starting at a desired date over a period of time
+    (default) or until a specified end date.
+
+    This will look at each day's stock and calculate the amount the stock has 
+    changed by between the previous day and the selected day. These change
+    records are then saved in a csv using the save_stock_data function.
+
+    Stock data will be collected between each day, so technically datapoints are
+    collected between the first of the start_month to the start of the end month
+    (exclusive). There will be missing data points, but as general trends are
+    being collected, it doesn't really matter too too much...
+
+    @params:
+      - stock_ticker {str}:
+        The Ticker of the desired public stock
+      - start_month {int}:
+        The numerical representation of the starting date, in ISO format
+        (YYYY-mm-dd)
+      - end_month? {int}:
+        The numberical representation of the ending date, in ISO format
+        (YYYY-mm-dd), defaults to None so it will parse until the current day
+    """
+    ticker = yf.Ticker(stock_ticker)
+    history = ticker.history(start=start_date, end=end_date)
+    dates = history.index
+    for index, current_stock in enumerate(history["Close"]):
+        if(index == 0): continue
+        current_date = dates[index]
+        change = current_stock - history["Close"][index]
+        change_type = "rise" # Either rise or drop
+
+        if(change < 0):
+            change_type = "drop"
+            change *= -1
+
+        sd = {"prev_change" : change,
+              "avg_drop" : 0,
+              "avg_rise" : 0,
+              "max_drop" : 0,
+              "max_rise" : 0,
+              "occurances" : [current_date]}
+        
+        sd[f"max_{change_type}"] = change
+        sd[f"avg_{change_type}"] = change
+
+        save_stock_data(stock_ticker, sd)
     return
 
 def main():

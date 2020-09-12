@@ -220,6 +220,9 @@ def collect_stock_data(stock_ticker, start_date, end_date=None):
         save_stock_data(stock_ticker, sd)
     return
 
+def linear_interpolate(x1, y1, x2, y2, x):
+    return (x - x1) * (y2 - y1) / (x2 - x1) + y1
+
 def main():
     tsla = yf.Ticker("TSLA")
     print(tsla.info)

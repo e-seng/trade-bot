@@ -102,7 +102,6 @@ def handle_data_match(existing_values, update_values):
     if(update_values["max_rise"] > float(existing_values["max_rise"])):
         existing_values["max_rise"] = update_values["max_rise"]
     # occurances
-    print("105:", date)
     occurances = yeet_chars(existing_values["occurances"], ['\'', '"', '[', ']', ' ']).split(",")
     occurances.append(date)
     existing_values["occurances"] = occurances

@@ -223,6 +223,29 @@ def collect_stock_data(stock_ticker, start_date, end_date=None):
 def linear_interpolate(x1, y1, x2, y2, x):
     return (x - x1) * (y2 - y1) / (x2 - x1) + y1
 
+def predict_stock_change(stock_ticker, prev_change, filepath=None, root="."):
+    """
+    Predicts the stock change based off previous data and the previous day's
+    stock change. 
+    
+    It will return an estimated rise, an estimated drop, an
+    extreme rise, an extreme drop and an overall estimated average.
+
+    @params:
+      - stock_ticker {str}:
+        The ticker of the desired public stock
+      - prev_change {float}:
+        The previous change, most likely between the current and previous day
+      - filepath? {str}:
+        A respecified filepath that is not the default (defaults to ./data/file)
+      - root? {str}:
+        A respecified root folder that is not the default (defaults to current
+        working directory)
+    """
+    if not filepath:
+        filename = f"sd-{stock_ticker.lower()}.csv"
+        filepath = os.path.join(root, "data", filename)
+    
 def main():
     tsla = yf.Ticker("TSLA")
     print(tsla.info)

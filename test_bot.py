@@ -220,7 +220,7 @@ def collect_stock_data(stock_ticker, start_date, end_date=None):
         save_stock_data(stock_ticker, sd)
     return
 
-def linear_interpolate(x1, y1, x2, y2, x):
+def linear_interpolation(x, x1, y1, x2, y2):
     return (x - x1) * (y2 - y1) / (x2 - x1) + y1
 
 def predict_stock_change(stock_ticker, prev_change, filepath=None, root="."):
